@@ -121,7 +121,7 @@ public class OurAwesomeApp
 		return error(response, HTTP_BAD_REQUEST, "JSON parse error", null);
 	}
 
-	public static void main( String[] args) {
+	public static void main(String[] args) {
 		//port(4567);
 		//secure(keystoreFilePath, keystorePassword, truststoreFilePath, truststorePassword);
 		//threadPool(maxThreads);
@@ -129,10 +129,46 @@ public class OurAwesomeApp
 
 //		Model model = new Model();
 
-		Sql2o sql2o = new Sql2o("jdbc:postgresql://10.0.0.88:5432/william", "william_owner", "postgres");
+		Sql2o sql2o;
+		if (args.length == 3) {
+			sql2o = new Sql2o(args[0], args[1], args[2]);
+		} else if (args.length == 0) {
+			sql2o = new Sql2o("jdbc:postgresql://10.0.0.88:5432/william", "postgres", "postgres");
+		} else {
+			throw new AssertionError("[JDBC connection URL] [user] [password]");
+		}
 		sql2oDao = new Sql2oDao(sql2o);
-		sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
-		sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
+		if (args.length == 0)
+		{
+			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
+			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
+			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
+			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
+			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
+			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
+			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
+			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
+			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
+			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
+			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
+			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
+			sql2oDao.createAction("CAT", "MIAT71", new LocalDate());
+			sql2oDao.createAction("CAT", "MIAT71", new LocalDate());
+			sql2oDao.createAction("CAT", "MIAT71", new LocalDate());
+			sql2oDao.createAction("CAT", "MIAT71", new LocalDate());
+			sql2oDao.createAction("CAT", "MIAT71", new LocalDate());
+			sql2oDao.createAction("DOG", "MIAT71", new LocalDate());
+			sql2oDao.createAction("DOG", "MIAT71", new LocalDate());
+			sql2oDao.createAction("DOG", "MIAT71", new LocalDate());
+			sql2oDao.createAction("DOG", "MIAT71", new LocalDate());
+			sql2oDao.createAction("FIS", "MIAT71", new LocalDate());
+			sql2oDao.createAction("FIS", "MIAT71", new LocalDate());
+			sql2oDao.createAction("FIS", "MIAT71", new LocalDate());
+			sql2oDao.createAction("BUG", "MIAT71", new LocalDate());
+			sql2oDao.createAction("BUG", "MIAT71", new LocalDate());
+			sql2oDao.createAction("WAT", "MIAT71", new LocalDate());
+			sql2oDao.createAction("WAT", "MIAT71", new LocalDate().plusMonths(-1));
+		}
 
 		aboutUs();
 		otaApi();
