@@ -1,0 +1,29 @@
+web1:
+  image: markem/william
+  links:
+    - db
+web2:
+  image: markem/william
+  links:
+    - db
+web3:
+  image: markem/william
+   - db:
+web4:
+  image: markem/william
+  links:
+    - db
+lb:
+  image: markem/william-lb
+  ports:
+    - "80:80"
+    - "443:443"
+  links:
+    - web1
+    - web2
+    - web3
+    - web4
+  volumes:
+   - "/etc/letsencrypt/live/william.madeatfareoffice.com/:/etc/nginx/tls"
+db:
+  image: postgres
