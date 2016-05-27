@@ -1,12 +1,13 @@
 package com.madeatfareoffice.william;
 
-import com.madeatfareoffice.william.objects.Action;
-import com.madeatfareoffice.william.objects.OtaEquipment;
+import com.madeatfareoffice.william.objects.ActionResponse;
+import com.madeatfareoffice.william.objects.OtaEquipmentResponse;
 import com.madeatfareoffice.william.objects.RecommendResponse;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.YearMonth;
-import org.sql2o.*;
+import org.sql2o.Connection;
+import org.sql2o.Sql2o;
 
 import java.util.List;
 import java.util.UUID;
@@ -44,10 +45,10 @@ public class Sql2oDao {
      * Fetch all OTA equipments from database.
      * @return
      */
-    public List<OtaEquipment> getAllOtaEquipments() {
+    public List<OtaEquipmentResponse> getAllOtaEquipments() {
         try (Connection conn = sql2o.open()) {
-            List<OtaEquipment> equipments = conn.createQuery("select * from ota_equipments")
-                    .executeAndFetch(OtaEquipment.class);
+            List<OtaEquipmentResponse> equipments = conn.createQuery("select * from ota_equipments")
+                    .executeAndFetch(OtaEquipmentResponse.class);
             return equipments;
         }
     }
@@ -77,10 +78,10 @@ public class Sql2oDao {
      * Fetch all OTA equipments from database.
      * @return
      */
-    public List<Action> getAllActions() {
+    public List<ActionResponse> getAllActions() {
         try (Connection conn = sql2o.open()) {
-            List<Action> actions = conn.createQuery("select * from actions")
-                    .executeAndFetch(Action.class);
+            List<ActionResponse> actions = conn.createQuery("select * from actions")
+                    .executeAndFetch(ActionResponse.class);
             return actions;
         }
     }
@@ -91,12 +92,12 @@ public class Sql2oDao {
 		try (Connection conn = sql2o.open()) {
 			List<RecommendResponse> recommendations = conn.createQuery(
 					"select ota " +
-					"from actions" +
+					"from actions " +
 					"where " +
 						"date >= :start " +
 						"and date < :end " +
 					"group by ota " +
-					"order by count(*) desc, date, plo, action_uuid " +
+					"order by count(*) desc " +
 					"limit 5")
 				.addParameter("start", start)
 				.addParameter("end", end)
