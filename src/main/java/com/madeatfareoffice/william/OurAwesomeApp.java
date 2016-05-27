@@ -6,10 +6,8 @@ import static spark.Spark.post;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.madeatfareoffice.william.objects.AboutUs;
 import lombok.Data;
-import spark.Request;
-import spark.Response;
-import spark.Route;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -17,7 +15,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class OurAwesomeApp
@@ -25,21 +22,11 @@ public class OurAwesomeApp
 
 	private static final int HTTP_BAD_REQUEST = 400;
 
-	interface Validable {
+	public interface Validable {
 		boolean isValid();
 	}
 
 	@Data
-	static class AboutUs {
-		private final String teamName = "William";
-		private final String[] teamMembers = new String[] {"Martin Kemani", "Mikael Hellman", "Mikael Lennholm Berg", "Lauro Schuck"};
-		private final String programmingLanguage = "Java";
-		private final String database = "Postgres";
-		private final String framework = "Spark";
-		private final String appServer = "Jetty";
-	}
-
-		@Data
 	static class NewPostPayload {
 		private String title;
 		private List categories = new LinkedList<>();
@@ -87,23 +74,21 @@ public class OurAwesomeApp
 			mapper.writeValue(sw, data);
 			return sw.toString();
 		} catch (IOException e){
-			throw new RuntimeException("IOException from a StringWriter?");
+			throw new RuntimeException("IOException from a StringWriter?", e);
 		}
 	}
 
 	public static void main( String[] args) {
-		//port(9090);
+		//port(4567);
 		//secure(keystoreFilePath, keystorePassword, truststoreFilePath, truststorePassword);
 		//threadPool(maxThreads);
 		//threadPool(maxThreads, minThreads, timeOutMillis);
 
 		Model model = new Model();
 
-		get("/", (request, response) -> {
-			response.status(200);
-			response.type("application/json");
-			return dataToJson(new AboutUs());
-		});
+		aboutUs();
+		otaGet();
+		otaPost();
 
 		// insert a post (using HTTP post method)
 		post("/posts", (request, response) -> {
@@ -129,6 +114,56 @@ public class OurAwesomeApp
 			response.status(200);
 			response.type("application/json");
 			return dataToJson(model.getAllPosts());
+		});
+	}
+
+	public static void aboutUs() {
+		get("/", (request, response) -> {
+			response.status(200);
+			response.type("application/json");
+			return dataToJson(new AboutUs());
+		});
+	}
+
+	/**
+	 * OtaEquipment is additional equipment for rental cars. And something that can be recommended to the end user
+	 * of a car rental website. Populate at least 30 ACRISS standard equipments to your DB. (This message and its
+	 * attributes mentions OTA, even though the codes we use are ACRISS codes).
+	 *
+	 * ACRISS Code list on Fareoffice Dropbox: https://www.dropbox.com/s/unu02moi1sn1jzy/EquipmentCodes.xlsx?dl=0
+	 */
+	public static void otaGet() {
+		get("/api/otaequipment", (request, response) -> {
+			response.status(200);
+			response.type("application/json");
+			return dataToJson(null);
+		});
+
+	}
+
+	/**
+	 * List all items that have been added to the database
+	 *
+	 * Request example: {”description”:”GPS”,”ota”:”GPS device”}
+	 * Response, successfully stored: {”id”:”5746f7ea1b674201c0f11368″}
+	 */
+	public static void otaPost() {
+		post("/api/otaequipment", (request, response) -> {
+//			try {
+				ObjectMapper mapper = new ObjectMapper();
+//				NewPostPayload creation = mapper.readValue(request.body(), NewPostPayload.class);
+//				if (!creation.isValid()) {
+//					response.status(HTTP_BAD_REQUEST);
+//					return "";
+//				}
+//				int id = model.createPost(creation.getTitle(), creation.getContent(), creation.getCategories());
+				response.status(200);
+				response.type("application/json");
+				return -1;
+//			} catch (JsonParseException jpe) {
+//				response.status(HTTP_BAD_REQUEST);
+//				return "";
+//			}
 		});
 	}
 }
