@@ -2,8 +2,10 @@ package com.madeatfareoffice.william;
 
 import com.madeatfareoffice.william.objects.Action;
 import com.madeatfareoffice.william.objects.OtaEquipment;
-import com.sun.tools.internal.xjc.model.Model;
+import com.madeatfareoffice.william.objects.RecommendResponse;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.joda.time.YearMonth;
 import org.sql2o.*;
 
 import java.util.List;
@@ -82,6 +84,26 @@ public class Sql2oDao {
             return actions;
         }
     }
+
+	public List<RecommendResponse> getRecommendations(YearMonth yearMonth) {
+		DateTime start = yearMonth.toLocalDate(1).toDateTimeAtStartOfDay();
+		DateTime end = start.plusMonths(1);
+		try (Connection conn = sql2o.open()) {
+			List<RecommendResponse> recommendations = conn.createQuery(
+					"select ota " +
+					"from actions" +
+					"where " +
+						"date >= :start " +
+						"and date < :end " +
+					"group by ota " +
+					"order by count(*) desc, date, plo, action_uuid " +
+					"limit 5")
+				.addParameter("start", start)
+				.addParameter("end", end)
+				.executeAndFetch(RecommendResponse.class);
+			return recommendations;
+		}
+	}
     
     /**
      * Our generator of UUIDs, just random.

@@ -267,7 +267,7 @@ public class OurAwesomeApp
 	}
 
 	/*
-	GET: show the  5 MOST popular equipment items  for ${month}. This can be used as a recommendation for
+	GET: show the 5 MOST popular equipment items for ${month}. This can be used as a recommendation for
 	other visitors to our fictional car rental site.
 
 	Response examples:
@@ -301,7 +301,7 @@ public class OurAwesomeApp
 				} catch (IllegalArgumentException e) {
 					return error(response, HTTP_BAD_REQUEST, "invalid parameters", e);
 				}
-				return ok(response, new RecommendResponse[] { new RecommendResponse() });
+				return ok(response, sql2oDao.getRecommendations(yearMonth));
 			}
 			catch (RuntimeException e) {
 				return unknownError(response, e);
