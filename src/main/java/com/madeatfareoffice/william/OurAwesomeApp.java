@@ -7,6 +7,8 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.madeatfareoffice.william.objects.*;
+import org.joda.time.LocalDate;
+import org.sql2o.Sql2o;
 import spark.Request;
 import spark.Response;
 
@@ -19,6 +21,7 @@ public class OurAwesomeApp
 	private static final int HTTP_BAD_REQUEST = 400;
 	private static final int HTTP_OK = 200;
 	private static final String JSON_TYPE = "application/json";
+	private Sql2oDao sql2oDao;
 
 	public interface Validable {
 		boolean isValid();
@@ -119,6 +122,11 @@ public class OurAwesomeApp
 		//threadPool(maxThreads, minThreads, timeOutMillis);
 
 //		Model model = new Model();
+
+		Sql2o sql2o = new Sql2o("jdbc:postgresql://10.0.0.88:5432/william", "william_owner", "postgres");
+		Sql2oDao sql2oDao = new Sql2oDao(sql2o);
+		sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
+		sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
 
 		aboutUs();
 		otaApi();
