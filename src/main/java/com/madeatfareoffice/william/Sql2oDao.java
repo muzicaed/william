@@ -28,16 +28,14 @@ public class Sql2oDao {
      * @param description
      * @return
      */
-    public UUID createOtaEquipment(String otaCode, String description) {
+    public String createOtaEquipment(String otaCode, String description) {
         try (Connection conn = sql2o.beginTransaction()) {
-            UUID otaUuid = uuidGenerator.generate();
-            conn.createQuery("insert into ota_equipments(ota_uuid, ota, description) VALUES (:ota_uuid, :ota, :description)")
-                    .addParameter("ota_uuid", otaUuid)
+            conn.createQuery("insert into ota_equipment(ota, description) VALUES (:ota, :description)")
                     .addParameter("ota", otaCode)
                     .addParameter("description", description)
                     .executeUpdate();
             conn.commit();
-            return otaUuid;
+            return otaCode;
         }
     }
 
@@ -47,7 +45,7 @@ public class Sql2oDao {
      */
     public List<OtaEquipmentResponse> getAllOtaEquipments() {
         try (Connection conn = sql2o.open()) {
-            List<OtaEquipmentResponse> equipments = conn.createQuery("select * from ota_equipments")
+            List<OtaEquipmentResponse> equipments = conn.createQuery("select * from ota_equipment")
                     .executeAndFetch(OtaEquipmentResponse.class);
             return equipments;
         }

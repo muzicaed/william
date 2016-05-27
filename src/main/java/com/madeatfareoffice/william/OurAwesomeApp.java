@@ -138,37 +138,37 @@ public class OurAwesomeApp
 			throw new AssertionError("[JDBC connection URL] [user] [password]");
 		}
 		sql2oDao = new Sql2oDao(sql2o);
-		if (args.length == 0)
-		{
-			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
-			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
-			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
-			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
-			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
-			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
-			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
-			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
-			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
-			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
-			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
-			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
-			sql2oDao.createAction("CAT", "MIAT71", new LocalDate());
-			sql2oDao.createAction("CAT", "MIAT71", new LocalDate());
-			sql2oDao.createAction("CAT", "MIAT71", new LocalDate());
-			sql2oDao.createAction("CAT", "MIAT71", new LocalDate());
-			sql2oDao.createAction("CAT", "MIAT71", new LocalDate());
-			sql2oDao.createAction("DOG", "MIAT71", new LocalDate());
-			sql2oDao.createAction("DOG", "MIAT71", new LocalDate());
-			sql2oDao.createAction("DOG", "MIAT71", new LocalDate());
-			sql2oDao.createAction("DOG", "MIAT71", new LocalDate());
-			sql2oDao.createAction("FIS", "MIAT71", new LocalDate());
-			sql2oDao.createAction("FIS", "MIAT71", new LocalDate());
-			sql2oDao.createAction("FIS", "MIAT71", new LocalDate());
-			sql2oDao.createAction("BUG", "MIAT71", new LocalDate());
-			sql2oDao.createAction("BUG", "MIAT71", new LocalDate());
-			sql2oDao.createAction("WAT", "MIAT71", new LocalDate());
-			sql2oDao.createAction("WAT", "MIAT71", new LocalDate().plusMonths(-1));
-		}
+//		if (args.length == 0)
+//		{
+//			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
+//			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
+//			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
+//			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
+//			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
+//			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
+//			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
+//			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
+//			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
+//			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
+//			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
+//			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
+//			sql2oDao.createAction("CAT", "MIAT71", new LocalDate());
+//			sql2oDao.createAction("CAT", "MIAT71", new LocalDate());
+//			sql2oDao.createAction("CAT", "MIAT71", new LocalDate());
+//			sql2oDao.createAction("CAT", "MIAT71", new LocalDate());
+//			sql2oDao.createAction("CAT", "MIAT71", new LocalDate());
+//			sql2oDao.createAction("DOG", "MIAT71", new LocalDate());
+//			sql2oDao.createAction("DOG", "MIAT71", new LocalDate());
+//			sql2oDao.createAction("DOG", "MIAT71", new LocalDate());
+//			sql2oDao.createAction("DOG", "MIAT71", new LocalDate());
+//			sql2oDao.createAction("FIS", "MIAT71", new LocalDate());
+//			sql2oDao.createAction("FIS", "MIAT71", new LocalDate());
+//			sql2oDao.createAction("FIS", "MIAT71", new LocalDate());
+//			sql2oDao.createAction("BUG", "MIAT71", new LocalDate());
+//			sql2oDao.createAction("BUG", "MIAT71", new LocalDate());
+//			sql2oDao.createAction("WAT", "MIAT71", new LocalDate());
+//			sql2oDao.createAction("WAT", "MIAT71", new LocalDate().plusMonths(-1));
+//		}
 
 		aboutUs();
 		otaApi();
@@ -222,7 +222,7 @@ public class OurAwesomeApp
 	POST: ...
 	GET: list all items that have been added to the database
 
-	Request example: {”description”:”GPS”,”ota”:”GPS device”}
+	Request example: {"description":"GPS decive","ota":"GPS device"}
 	Responses:
 		Successfully stored
     		{”id”:”5746f7ea1b674201c0f11368″}
@@ -233,7 +233,7 @@ public class OurAwesomeApp
 			{
 				return ok(response, sql2oDao.getAllOtaEquipments());
 			}
-			catch (RuntimeException e) {
+			catch (Exception e) {
 				return unknownError(response, e);
 			}
 		});
@@ -244,11 +244,11 @@ public class OurAwesomeApp
 				if (!reqObj.isValid()) {
 					return validationError(response, reqObj);
 				}
-				UUID id = sql2oDao.createOtaEquipment(reqObj.getOta(), reqObj.getDescription());
-				return id(response, id.toString());
+				String id = sql2oDao.createOtaEquipment(reqObj.getOta(), reqObj.getDescription());
+				return id(response, id);
 			} catch (JsonParseException jpe) {
 				return parseError(response);
-			} catch (RuntimeException e) {
+			} catch (Exception e) {
 				return unknownError(response, e);
 			}
 		});
@@ -265,7 +265,7 @@ public class OurAwesomeApp
 
 	Request example
 
-	    {”ota”:”NAV”,”plo”:”MADT71″,”date”:”2016-10-14″}
+	    {"ota":"SOMETHING","plo":"MADT71","date":"2016-01-14"}
 
 	Responses
     	Errors
@@ -280,7 +280,7 @@ public class OurAwesomeApp
 			{
 				return ok(response, sql2oDao.getAllActions());
 			}
-			catch (RuntimeException e) {
+			catch (Exception e) {
 				return unknownError(response, e);
 			}
 		});
@@ -295,7 +295,8 @@ public class OurAwesomeApp
 				UUID id = sql2oDao.createAction(reqObj.getOta(), reqObj.getPlo(), reqObj.getParsedDate());
 				return id(response, id.toString());
 			}
-			catch (RuntimeException e) {
+			catch (Exception e)
+			{
 				return unknownError(response, e);
 			}
 		});
@@ -339,7 +340,7 @@ public class OurAwesomeApp
 				}
 				return ok(response, sql2oDao.getRecommendations(yearMonth));
 			}
-			catch (RuntimeException e) {
+			catch (Exception e) {
 				return unknownError(response, e);
 			}
 		});
