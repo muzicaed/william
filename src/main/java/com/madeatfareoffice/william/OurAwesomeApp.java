@@ -30,49 +30,6 @@ public class OurAwesomeApp
 		String getErrorMessage();
 	}
 
-	/*
-	SAMPLE DATA MODEL
-	@Data
-	static class NewPostPayload {
-		private String title;
-		private List categories = new LinkedList<>();
-		private String content;
-
-		public boolean isValid() {
-			return title != null && !title.isEmpty() && !categories.isEmpty();
-		}
-	}
-
-	// In a real application you may want to use a DB, for this example we just store the posts in memory
-	public static class Model {
-		private int nextId = 1;
-		private Map posts = new HashMap<>();
-
-		@Data
-		class Post {
-			private int id;
-			private String title;
-			private List categories;
-			private String content;
-		}
-
-		public int createPost(String title, String content, List categories){
-			int id = nextId++;
-			Post post = new Post();
-			post.setId(id);
-			post.setTitle(title);
-			post.setContent(content);
-			post.setCategories(categories);
-			posts.put(id, post);
-			return id;
-		}
-
-		public List getAllPosts(){
-			return (List) posts.keySet().stream().sorted().map((id) -> posts.get(id)).collect(Collectors.toList());
-		}
-	}
-	*/
-
 	public static String dataToJson(Object data) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
@@ -127,8 +84,6 @@ public class OurAwesomeApp
 		//threadPool(maxThreads);
 		//threadPool(maxThreads, minThreads, timeOutMillis);
 
-//		Model model = new Model();
-
 		Sql2o sql2o;
 		if (args.length == 3) {
 			sql2o = new Sql2o(args[0], args[1], args[2]);
@@ -138,71 +93,11 @@ public class OurAwesomeApp
 			throw new AssertionError("[JDBC connection URL] [user] [password]");
 		}
 		sql2oDao = new Sql2oDao(sql2o);
-//		if (args.length == 0)
-//		{
-//			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
-//			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
-//			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
-//			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
-//			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
-//			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
-//			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
-//			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
-//			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
-//			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
-//			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
-//			sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
-//			sql2oDao.createAction("CAT", "MIAT71", new LocalDate());
-//			sql2oDao.createAction("CAT", "MIAT71", new LocalDate());
-//			sql2oDao.createAction("CAT", "MIAT71", new LocalDate());
-//			sql2oDao.createAction("CAT", "MIAT71", new LocalDate());
-//			sql2oDao.createAction("CAT", "MIAT71", new LocalDate());
-//			sql2oDao.createAction("DOG", "MIAT71", new LocalDate());
-//			sql2oDao.createAction("DOG", "MIAT71", new LocalDate());
-//			sql2oDao.createAction("DOG", "MIAT71", new LocalDate());
-//			sql2oDao.createAction("DOG", "MIAT71", new LocalDate());
-//			sql2oDao.createAction("FIS", "MIAT71", new LocalDate());
-//			sql2oDao.createAction("FIS", "MIAT71", new LocalDate());
-//			sql2oDao.createAction("FIS", "MIAT71", new LocalDate());
-//			sql2oDao.createAction("BUG", "MIAT71", new LocalDate());
-//			sql2oDao.createAction("BUG", "MIAT71", new LocalDate());
-//			sql2oDao.createAction("WAT", "MIAT71", new LocalDate());
-//			sql2oDao.createAction("WAT", "MIAT71", new LocalDate().plusMonths(-1));
-//		}
 
 		aboutUs();
 		otaApi();
 		actionApi();
 		recommendApi();
-
-		/*
-		SAMPLE CODE
-		// insert a post (using HTTP post method)
-		post("/posts", (request, response) -> {
-			try {
-				ObjectMapper mapper = new ObjectMapper();
-				NewPostPayload creation = mapper.readValue(request.body(), NewPostPayload.class);
-				if (!creation.isValid()) {
-					response.status(HTTP_BAD_REQUEST);
-					return "";
-				}
-				int id = model.createPost(creation.getTitle(), creation.getContent(), creation.getCategories());
-				response.status(200);
-				response.type("application/json");
-				return id;
-			} catch (JsonParseException jpe) {
-				response.status(HTTP_BAD_REQUEST);
-				return "";
-			}
-		});
-
-		// get all post (using HTTP get method)
-		get("/posts", (request, response) -> {
-			response.status(200);
-			response.type("application/json");
-			return dataToJson(model.getAllPosts());
-		});
-		*/
 	}
 
 	/*
