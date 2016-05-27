@@ -15,6 +15,7 @@ import spark.Response;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.UUID;
 
 public class OurAwesomeApp
 {
@@ -22,7 +23,7 @@ public class OurAwesomeApp
 	private static final int HTTP_BAD_REQUEST = 400;
 	private static final int HTTP_OK = 200;
 	private static final String JSON_TYPE = "application/json";
-	private Sql2oDao sql2oDao;
+	private static Sql2oDao sql2oDao;
 
 	public interface Validable {
 		boolean isValid();
@@ -108,12 +109,16 @@ public class OurAwesomeApp
 		return response(response, HTTP_BAD_REQUEST, new ErrorResponse(object.getErrorMessage()));
 	}
 
-	public static String error(Response response, String message, Exception e) {
-		return response(response, HTTP_BAD_REQUEST, new ErrorResponse(message + (e == null ? "" : ": " + e.getMessage() + (e.getCause() == null ? "" : " (" + e.getCause().getMessage() + ")"))));
+	public static String error(Response response, int httpCode, String message, Exception e) {
+		return response(response, httpCode, new ErrorResponse(message + (e == null ? "" : ": " + e.getMessage() + (e.getCause() == null ? "" : " (" + e.getCause().getMessage() + ")"))));
+	}
+
+	public static String unknownError(Response response, Exception e) {
+		return error(response, 500, "unknown error", e);
 	}
 
 	public static String parseError(Response response) {
-		return error(response, "JSON parse error", null);
+		return error(response, HTTP_BAD_REQUEST, "JSON parse error", null);
 	}
 
 	public static void main( String[] args) {
@@ -124,13 +129,11 @@ public class OurAwesomeApp
 
 //		Model model = new Model();
 
-		/*
 		Sql2o sql2o = new Sql2o("jdbc:postgresql://10.0.0.88:5432/william", "william_owner", "postgres");
-		Sql2oDao sql2oDao = new Sql2oDao(sql2o);
+		sql2oDao = new Sql2oDao(sql2o);
 		sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
 		sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
-*/
-		
+
 		aboutUs();
 		otaApi();
 		actionApi();
@@ -190,8 +193,13 @@ public class OurAwesomeApp
 	*/
 	public static void otaApi() {
 		get("/api/otaequipment", (request, response) -> {
-			// TODO implement it
-			return ok(response, new OtaEquipmentResponse[] {new OtaEquipmentResponse()});
+			try
+			{
+				return ok(response, sql2oDao.getAllOtaEquipments());
+			}
+			catch (RuntimeException e) {
+				return unknownError(response, e);
+			}
 		});
 
 		post("/api/otaequipment", (request, response) -> {
@@ -200,10 +208,12 @@ public class OurAwesomeApp
 				if (!reqObj.isValid()) {
 					return validationError(response, reqObj);
 				}
-				// TODO implement stuff here
-				return id(response, "dummy");
+				UUID id = sql2oDao.createOtaEquipment(reqObj.getOta(), reqObj.getDescription());
+				return id(response, id.toString());
 			} catch (JsonParseException jpe) {
 				return parseError(response);
+			} catch (RuntimeException e) {
+				return unknownError(response, e);
 			}
 		});
 	}
@@ -230,17 +240,28 @@ public class OurAwesomeApp
 	 */
 	public static void actionApi() {
 		get("/api/action", (request, response) -> {
-			// TODO implement
-			return ok(response, new ActionResponse[] { new ActionResponse() });
+			try
+			{
+				return ok(response, sql2oDao.getAllActions());
+			}
+			catch (RuntimeException e) {
+				return unknownError(response, e);
+			}
 		});
 
 		post("/api/action", (request, response) -> {
-			ActionRequest reqObj = jsonToData(request, ActionRequest.class);
-			if (!reqObj.isValid()) {
-				return validationError(response, reqObj);
+			try
+			{
+				ActionRequest reqObj = jsonToData(request, ActionRequest.class);
+				if (!reqObj.isValid()) {
+					return validationError(response, reqObj);
+				}
+				UUID id = sql2oDao.createAction(reqObj.getOta(), reqObj.getPlo(), reqObj.getParsedDate());
+				return id(response, id.toString());
 			}
-			// TODO implement
-			return id(response, "dummy");
+			catch (RuntimeException e) {
+				return unknownError(response, e);
+			}
 		});
 
 	}
@@ -270,16 +291,21 @@ public class OurAwesomeApp
 	 */
 	public static void recommendApi() {
 		get("/api/recommend/:year/:month", (request, response) -> {
-			String year = request.params(":year");
-			String month = request.params(":month");
-			YearMonth yearMonth;
-			try {
-				yearMonth = Validator.parseYearMonth(year, month);
-			} catch (IllegalArgumentException e) {
-				return error(response, "invalid parameters", e);
+			try
+			{
+				String year = request.params(":year");
+				String month = request.params(":month");
+				YearMonth yearMonth;
+				try {
+					yearMonth = Validator.parseYearMonth(year, month);
+				} catch (IllegalArgumentException e) {
+					return error(response, HTTP_BAD_REQUEST, "invalid parameters", e);
+				}
+				return ok(response, new RecommendResponse[] { new RecommendResponse() });
 			}
-			// TODO implement
-			return ok(response, new RecommendResponse[] { new RecommendResponse() });
+			catch (RuntimeException e) {
+				return unknownError(response, e);
+			}
 		});
 	}
 }
