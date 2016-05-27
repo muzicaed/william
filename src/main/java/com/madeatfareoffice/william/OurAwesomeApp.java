@@ -89,32 +89,8 @@ public class OurAwesomeApp
 		aboutUs();
 		otaGet();
 		otaPost();
-
-		// insert a post (using HTTP post method)
-		post("/posts", (request, response) -> {
-			try {
-				ObjectMapper mapper = new ObjectMapper();
-				NewPostPayload creation = mapper.readValue(request.body(), NewPostPayload.class);
-				if (!creation.isValid()) {
-					response.status(HTTP_BAD_REQUEST);
-					return "";
-				}
-				int id = model.createPost(creation.getTitle(), creation.getContent(), creation.getCategories());
-				response.status(200);
-				response.type("application/json");
-				return id;
-			} catch (JsonParseException jpe) {
-				response.status(HTTP_BAD_REQUEST);
-				return "";
-			}
-		});
-
-		// get all post (using HTTP get method)
-		get("/posts", (request, response) -> {
-			response.status(200);
-			response.type("application/json");
-			return dataToJson(model.getAllPosts());
-		});
+		actionGet();
+		actionPost();
 	}
 
 	public static void aboutUs() {
@@ -149,21 +125,36 @@ public class OurAwesomeApp
 	 */
 	public static void otaPost() {
 		post("/api/otaequipment", (request, response) -> {
-//			try {
-				ObjectMapper mapper = new ObjectMapper();
-//				NewPostPayload creation = mapper.readValue(request.body(), NewPostPayload.class);
-//				if (!creation.isValid()) {
-//					response.status(HTTP_BAD_REQUEST);
-//					return "";
-//				}
-//				int id = model.createPost(creation.getTitle(), creation.getContent(), creation.getCategories());
-				response.status(200);
-				response.type("application/json");
-				return -1;
-//			} catch (JsonParseException jpe) {
-//				response.status(HTTP_BAD_REQUEST);
-//				return "";
-//			}
+			response.status(200);
+			response.type("application/json");
+			return dataToJson(null);
+		});
+	}
+
+	/**
+	 * Record an action
+	 *
+	 * Request example: {”ota”:”NAV”,”plo”:”MADT71″,”date”:”2016-10-14″}
+	 * Response, successfully stored: {”id”:”5746f39a1b674201ba031ab1″}
+	 * Response, error: {”error”:”OTA Code not in our database”}
+	 * Response, error: {”error”:”Value error”}
+	 */
+	public static void actionPost() {
+		post("/api/action", (request, response) -> {
+			response.status(200);
+			response.type("application/json");
+			return dataToJson(null);
+		});
+	}
+
+	/**
+	 * List all actions that have been added to the database
+	 */
+	public static void actionGet() {
+		post("/api/action", (request, response) -> {
+			response.status(200);
+			response.type("application/json");
+			return dataToJson(null);
 		});
 	}
 }
