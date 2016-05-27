@@ -8,4 +8,4 @@ ADD target /target
 
 RUN chmod 777 -R /target
 
-CMD java /target/
+CMD java -jar /target/william-1.0-SNAPSHOT.jar
