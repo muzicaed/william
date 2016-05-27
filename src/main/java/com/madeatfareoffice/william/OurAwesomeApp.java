@@ -124,11 +124,13 @@ public class OurAwesomeApp
 
 //		Model model = new Model();
 
+		/*
 		Sql2o sql2o = new Sql2o("jdbc:postgresql://10.0.0.88:5432/william", "william_owner", "postgres");
 		Sql2oDao sql2oDao = new Sql2oDao(sql2o);
 		sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
 		sql2oDao.createAction("GPS", "MIAT71", new LocalDate());
-
+*/
+		
 		aboutUs();
 		otaApi();
 		actionApi();
