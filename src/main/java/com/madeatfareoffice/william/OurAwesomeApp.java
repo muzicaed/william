@@ -3,9 +3,12 @@ package com.madeatfareoffice.william;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.madeatfareoffice.william.objects.AboutUsResponse;
+import com.madeatfareoffice.william.objects.*;
+import spark.Request;
+import spark.Response;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -14,9 +17,12 @@ public class OurAwesomeApp
 {
 
 	private static final int HTTP_BAD_REQUEST = 400;
+	private static final int HTTP_OK = 200;
+	private static final String JSON_TYPE = "application/json";
 
 	public interface Validable {
 		boolean isValid();
+		String getErrorMessage();
 	}
 
 	/*
@@ -74,6 +80,38 @@ public class OurAwesomeApp
 		}
 	}
 
+	public static <T> T jsonToData(Request request, Class<T> clazz) throws IOException
+	{
+		ObjectMapper mapper = new ObjectMapper();
+		return mapper.readValue(request.body(), clazz);
+	}
+
+	public static String response(Response response, int httpCode, Object object) {
+		response.status(httpCode);
+		response.type(JSON_TYPE);
+		return dataToJson(object);
+	}
+
+	public static String ok(Response response, Object object) {
+		return response(response, HTTP_OK, object);
+	}
+
+	public static String id(Response response, String id) {
+		return response(response, HTTP_OK, new ResourceIdResponse(id));
+	}
+
+	public static String validationError(Response response, Validable object) {
+		return response(response, HTTP_BAD_REQUEST, new ErrorResponse(object.getErrorMessage()));
+	}
+
+	public static String error(Response response, String message, Exception e) {
+		return response(response, HTTP_BAD_REQUEST, new ErrorResponse(message + (e == null ? "" : ": " + e)));
+	}
+
+	public static String parseError(Response response) {
+		return error(response, "JSON parse error", null);
+	}
+
 	public static void main( String[] args) {
 		//port(4567);
 		//secure(keystoreFilePath, keystorePassword, truststoreFilePath, truststorePassword);
@@ -122,9 +160,7 @@ public class OurAwesomeApp
 	 */
 	public static void aboutUs() {
 		get("/", (request, response) -> {
-			response.status(200);
-			response.type("application/json");
-			return dataToJson(new AboutUsResponse());
+			return ok(response, new AboutUsResponse());
 		});
 	}
 
@@ -145,15 +181,21 @@ public class OurAwesomeApp
 	*/
 	public static void otaApi() {
 		get("/api/otaequipment", (request, response) -> {
-			response.status(200);
-			response.type("application/json");
-			return dataToJson(null);
+			// TODO implement it
+			return ok(response, new OtaEquipmentResponse[] {new OtaEquipmentResponse()});
 		});
 
 		post("/api/otaequipment", (request, response) -> {
-			response.status(200);
-			response.type("application/json");
-			return -1;
+			try {
+				OtaEquipmentRequest reqObj = jsonToData(request, OtaEquipmentRequest.class);
+				if (!reqObj.isValid()) {
+					return validationError(response, reqObj);
+				}
+				// TODO implement stuff here
+				return id(response, "dummy");
+			} catch (JsonParseException jpe) {
+				return parseError(response);
+			}
 		});
 	}
 

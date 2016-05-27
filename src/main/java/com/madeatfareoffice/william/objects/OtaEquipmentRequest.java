@@ -1,8 +1,21 @@
 package com.madeatfareoffice.william.objects;
 
-import lombok.Data;
+import com.madeatfareoffice.william.OurAwesomeApp;
 
-@Data
-public class OtaEquipmentRequest extends OtaEquipment
+
+public class OtaEquipmentRequest extends OtaEquipment implements OurAwesomeApp.Validable
 {
+	@Override
+	public boolean isValid()
+	{
+		// TODO implement
+		return false;
+	}
+
+	@Override
+	public String getErrorMessage()
+	{
+		// TODO implement
+		return null;
+	}
 }

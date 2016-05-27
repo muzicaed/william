@@ -6,4 +6,10 @@ import lombok.Data;
 public class ErrorResponse
 {
 	private String error;
+
+	public ErrorResponse() {}
+
+	public ErrorResponse(String error) {
+		this.error = error;
+	}
 }
