@@ -27,4 +27,6 @@ lb:
   volumes:
    - "/etc/letsencrypt/live/william.madeatfareoffice.com:/etc/nginx/tls"
 db:
-  image: postgres
+  image: kemani/william-db
+    ports:
+    - "5432:5432"
