@@ -30,6 +30,16 @@ public class OurAwesomeApp
 	}
 
 	@Data
+	static class AboutUs {
+		private final String teamName = "William";
+		private final String[] teamMembers = new String[] {"Martin Kemani", "Mikael Hellman", "Mikael Lennholm Berg", "Lauro Schuck"};
+		private final String programmingLanguage = "Java";
+		private final String database = "Postgres";
+		private final String framework = "Spark";
+		private final String appServer = "Jetty";
+	}
+
+		@Data
 	static class NewPostPayload {
 		private String title;
 		private List categories = new LinkedList<>();
@@ -88,6 +98,12 @@ public class OurAwesomeApp
 		//threadPool(maxThreads, minThreads, timeOutMillis);
 
 		Model model = new Model();
+
+		get("/", (request, response) -> {
+			response.status(200);
+			response.type("application/json");
+			return dataToJson(new AboutUs());
+		});
 
 		// insert a post (using HTTP post method)
 		post("/posts", (request, response) -> {
