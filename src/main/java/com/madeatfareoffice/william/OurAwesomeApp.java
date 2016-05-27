@@ -3,19 +3,12 @@ package com.madeatfareoffice.william;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.madeatfareoffice.william.objects.AboutUs;
-import lombok.Data;
+import com.madeatfareoffice.william.objects.AboutUsResponse;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class OurAwesomeApp
 {
@@ -131,7 +124,7 @@ public class OurAwesomeApp
 		get("/", (request, response) -> {
 			response.status(200);
 			response.type("application/json");
-			return dataToJson(new AboutUs());
+			return dataToJson(new AboutUsResponse());
 		});
 	}
 
