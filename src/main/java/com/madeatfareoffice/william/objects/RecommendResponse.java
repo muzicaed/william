@@ -3,8 +3,8 @@ package com.madeatfareoffice.william.objects;
 import lombok.Data;
 
 @Data
-public class RecommendResponse extends Action
+public class RecommendResponse
 {
-	// TODO remove this extra crap?
-	private String _id;
+	private String ota;
+	private int count;
 }

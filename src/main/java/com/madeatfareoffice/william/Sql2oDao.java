@@ -89,7 +89,7 @@ public class Sql2oDao {
 		DateTime end = start.plusMonths(1);
 		try (Connection conn = sql2o.open()) {
 			List<RecommendResponse> recommendations = conn.createQuery(
-					"select ota " +
+					"select ota, count(*) as count " +
 					"from actions " +
 					"where " +
 						"date >= :start " +
