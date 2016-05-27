@@ -8,11 +8,12 @@ web2:
     - db
 web3:
   image: markem/william
-   - db:
+  links:
+   - db
 web4:
   image: markem/william
   links:
-    - db
+   - db
 lb:
   image: markem/william-lb
   ports:
@@ -24,6 +25,6 @@ lb:
     - web3
     - web4
   volumes:
-   - "/etc/letsencrypt/live/william.madeatfareoffice.com/:/etc/nginx/tls"
+   - "/etc/letsencrypt/live/william.madeatfareoffice.com:/etc/nginx/tls"
 db:
   image: postgres
