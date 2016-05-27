@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.madeatfareoffice.william.objects.*;
+import org.joda.time.YearMonth;
 import org.joda.time.LocalDate;
 import org.sql2o.Sql2o;
 import spark.Request;
@@ -108,7 +109,7 @@ public class OurAwesomeApp
 	}
 
 	public static String error(Response response, String message, Exception e) {
-		return response(response, HTTP_BAD_REQUEST, new ErrorResponse(message + (e == null ? "" : ": " + e)));
+		return response(response, HTTP_BAD_REQUEST, new ErrorResponse(message + (e == null ? "" : ": " + e.getMessage() + (e.getCause() == null ? "" : " (" + e.getCause().getMessage() + ")"))));
 	}
 
 	public static String parseError(Response response) {
@@ -163,7 +164,7 @@ public class OurAwesomeApp
 		*/
 	}
 
-	/**
+	/*
 	 * They asked for it
 	 */
 	public static void aboutUs() {
@@ -178,7 +179,7 @@ public class OurAwesomeApp
 	ACRISS Code list on Fareoffice Dropbox: https://www.dropbox.com/s/unu02moi1sn1jzy/EquipmentCodes.xlsx?dl=0
 
 	POST: ...
-	GET: lList all items that have been added to the database
+	GET: list all items that have been added to the database
 
 	Request example: {”description”:”GPS”,”ota”:”GPS device”}
 	Responses:
@@ -232,6 +233,10 @@ public class OurAwesomeApp
 		});
 
 		post("/api/action", (request, response) -> {
+			ActionRequest reqObj = jsonToData(request, ActionRequest.class);
+			if (!reqObj.isValid()) {
+				return validationError(response, reqObj);
+			}
 			// TODO implement
 			return id(response, "dummy");
 		});
@@ -265,9 +270,14 @@ public class OurAwesomeApp
 		get("/api/recommend/:year/:month", (request, response) -> {
 			String year = request.params(":year");
 			String month = request.params(":month");
+			YearMonth yearMonth;
+			try {
+				yearMonth = Validator.parseYearMonth(year, month);
+			} catch (IllegalArgumentException e) {
+				return error(response, "invalid parameters", e);
+			}
 			// TODO implement
-			return error(response, "nothing for " + year + "-" + month, null);
-			//return ok(response, new RecommendResponse[] { new RecommendResponse() });
+			return ok(response, new RecommendResponse[] { new RecommendResponse() });
 		});
 	}
 }
