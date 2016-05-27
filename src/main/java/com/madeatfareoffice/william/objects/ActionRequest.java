@@ -1,5 +1,5 @@
 package com.madeatfareoffice.william.objects;
 
-public abstract class ActionRequest extends Action
+public class ActionRequest extends Action
 {
 }

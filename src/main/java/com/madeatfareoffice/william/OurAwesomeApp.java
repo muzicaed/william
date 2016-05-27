@@ -159,9 +159,7 @@ public class OurAwesomeApp
 	 * They asked for it
 	 */
 	public static void aboutUs() {
-		get("/", (request, response) -> {
-			return ok(response, new AboutUsResponse());
-		});
+		get("/", (request, response) -> ok(response, new AboutUsResponse()));
 	}
 
 	/*
@@ -206,7 +204,7 @@ public class OurAwesomeApp
 	Store a proper OTA code (i.e. CSI), a pickup date and a pickup location.
 
 	POST: save Action to the db
-	GET: lList all actions that have been added to the database
+	GET: list all actions that have been added to the database
 
 	Request example
 
@@ -221,15 +219,13 @@ public class OurAwesomeApp
 	 */
 	public static void actionApi() {
 		get("/api/action", (request, response) -> {
-			response.status(200);
-			response.type("application/json");
-			return dataToJson(null);
+			// TODO implement
+			return ok(response, new ActionResponse[] { new ActionResponse() });
 		});
 
 		post("/api/action", (request, response) -> {
-			response.status(200);
-			response.type("application/json");
-			return -1;
+			// TODO implement
+			return id(response, "dummy");
 		});
 
 	}
@@ -261,9 +257,9 @@ public class OurAwesomeApp
 		get("/api/recommend/:year/:month", (request, response) -> {
 			String year = request.params(":year");
 			String month = request.params(":month");
-			response.status(200);
-			response.type("application/json");
-			return dataToJson(year + "-" + month);
+			// TODO implement
+			return error(response, "nothing for " + year + "-" + month, null);
+			//return ok(response, new RecommendResponse[] { new RecommendResponse() });
 		});
 	}
 }
