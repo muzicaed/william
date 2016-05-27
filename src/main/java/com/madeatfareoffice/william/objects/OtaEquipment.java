@@ -2,7 +2,6 @@ package com.madeatfareoffice.william.objects;
 
 public abstract class OtaEquipment
 {
-	private String ota_uuid;
 	private String ota;
 	private String description;
 
@@ -26,8 +25,4 @@ public abstract class OtaEquipment
 		this.ota = ota;
 	}
 
-	public void setOta_uuid(String ota_uuid)
-	{
-		this.ota_uuid = ota_uuid;
-	}
 }
